@@ -1801,3 +1801,14 @@ public func =>? <A: Decodable, B: Decodable>(json: Any, keyPath: OptionalKeyPath
 public func =>? <A: Decodable>(json: Any, keyPath: OptionalKeyPath) throws -> A? {
     return try parse(json, keyPath: keyPath, decoder: Optional.decoder(A.decode))
 }
+
+/// Retrieves the object at `path` from `json` and decodes it according to the return type ignoring invalid objects
+///
+/// - parameter json: An object from NSJSONSerialization, preferably a `NSDictionary`.
+/// - parameter path: `KeyPath`– can be appended using with `=>` or `=>?`
+/// - throws: `DecodingError.typeMismatch, `.other(error, metadata)` or possible `.missingKeyError` on required keys
+/// - returns: `nil` if the object at `path` is `NSNull` or if any optional key is missing.
+///
+public func ~> <A: Decodable>(json: Any, keyPath: KeyPath) throws -> [A] {
+    return try [A?].decoder { try? A.decode($0) }(try parse(json, keyPath)).flatMap { $0 }
+}
