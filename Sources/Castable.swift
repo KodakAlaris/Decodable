@@ -8,6 +8,7 @@
 
 import Foundation
 
+
 /// Attempt to cast an `Any` to `T` or throw
 ///
 /// - throws: `DecodingError.typeMismatch(expected, actual, metadata)`
@@ -52,6 +53,10 @@ extension Double: Decodable, DynamicDecodable {
 }
 extension Bool: Decodable, DynamicDecodable {
     public static var decoder: (Any) throws -> Bool = { try cast($0) }
+}
+
+extension Float: Decodable, DynamicDecodable {
+    public static var decoder: (Any) throws -> Float = { try cast($0) }
 }
 
 private let iso8601DateFormatter: DateFormatter = {
